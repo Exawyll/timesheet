@@ -1,0 +1,37 @@
+
+entity Employee {
+	firstName String,
+    lastName String,
+    isActive Boolean,
+    team String
+}
+
+entity Project {
+	name String,
+    description String,
+    startDate Instant,
+    endDate Instant,
+    isActive Boolean
+}
+
+entity Week {
+	label String,
+    monthNum Integer,
+    year Integer,
+    weekNum Integer,
+    isActive Boolean
+}
+
+entity Activity {
+	timeSpent Long
+}
+
+relationship ManyToMany {
+	Activity{project(name)} to Project{activity},
+    Activity{employee(firstname)} to Employee{activity},
+    Activity{week(label)} to Week{activity}
+}
+
+relationship ManyToMany {
+	Project{employee(firstname)} to Employee{project}
+}
