@@ -28,10 +28,10 @@ entity Activity {
 
 relationship ManyToMany {
 	Activity{project(name)} to Project{activity},
-    Activity{employee(firstname)} to Employee{activity},
+    Activity{employee(firstName)} to Employee{activity},
     Activity{week(label)} to Week{activity}
 }
 
 relationship ManyToMany {
-	Project{employee(firstname)} to Employee{project}
+	Project{employee(firstName)} to Employee{project}
 }

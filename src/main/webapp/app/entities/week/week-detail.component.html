@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="week">
+            <h2><span>Week</span> {{ week.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Label</span></dt>
+                <dd>
+                    <span>{{ week.label }}</span>
+                </dd>
+                <dt><span>Month Num</span></dt>
+                <dd>
+                    <span>{{ week.monthNum }}</span>
+                </dd>
+                <dt><span>Year</span></dt>
+                <dd>
+                    <span>{{ week.year }}</span>
+                </dd>
+                <dt><span>Week Num</span></dt>
+                <dd>
+                    <span>{{ week.weekNum }}</span>
+                </dd>
+                <dt><span>Is Active</span></dt>
+                <dd>
+                    <span>{{ week.isActive }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/week', week.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

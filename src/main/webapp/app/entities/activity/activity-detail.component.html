@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="activity">
+            <h2><span>Activity</span> {{ activity.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Time Spent</span></dt>
+                <dd>
+                    <span>{{ activity.timeSpent }}</span>
+                </dd>
+                <dt><span>Project</span></dt>
+                <dd>
+                    <span *ngFor="let project of activity.projects; let last = last">
+                        <a [routerLink]="['/project', project?.id, 'view']">{{ project.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span>Employee</span></dt>
+                <dd>
+                    <span *ngFor="let employee of activity.employees; let last = last">
+                        <a [routerLink]="['/employee', employee?.id, 'view']">{{ employee.firstName }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span>Week</span></dt>
+                <dd>
+                    <span *ngFor="let week of activity.weeks; let last = last">
+                        <a [routerLink]="['/week', week?.id, 'view']">{{ week.label }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/activity', activity.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

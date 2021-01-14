@@ -1,0 +1,46 @@
+{
+  "name": "Activity",
+  "fields": [
+    {
+      "fieldName": "timeSpent",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "project",
+      "otherEntityRelationshipName": "activity",
+      "relationshipName": "project",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "activity",
+      "relationshipName": "employee",
+      "otherEntityField": "firstName",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "week",
+      "otherEntityRelationshipName": "activity",
+      "relationshipName": "week",
+      "otherEntityField": "label",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20210114132941",
+  "entityTableName": "activity",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

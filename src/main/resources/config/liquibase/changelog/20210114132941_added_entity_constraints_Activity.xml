@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Activity.
+    -->
+    <changeSet id="20210114132941-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="activity_id"
+                                 baseTableName="activity_project"
+                                 constraintName="fk_activity_project_activity_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="activity"/>
+
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="activity_project"
+                                 constraintName="fk_activity_project_project_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project"/>
+        
+        <addForeignKeyConstraint baseColumnNames="activity_id"
+                                 baseTableName="activity_employee"
+                                 constraintName="fk_activity_employee_activity_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="activity"/>
+
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="activity_employee"
+                                 constraintName="fk_activity_employee_employee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+        
+        <addForeignKeyConstraint baseColumnNames="activity_id"
+                                 baseTableName="activity_week"
+                                 constraintName="fk_activity_week_activity_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="activity"/>
+
+        <addForeignKeyConstraint baseColumnNames="week_id"
+                                 baseTableName="activity_week"
+                                 constraintName="fk_activity_week_week_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="week"/>
+        
+    </changeSet>
+</databaseChangeLog>
