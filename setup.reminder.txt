@@ -1,0 +1,17 @@
+WARNING! OpenShift configuration generated, but no Jib cache found
+If you forgot to generate the Docker image for this application, please run:
+To generate the missing Docker image(s), please run:
+  ./mvnw -ntp -Pprod verify jib:dockerBuild in C:\workspace\timesheet
+
+WARNING! You will need to push your image to a registry. If you have not done so, use the following commands to tag and push the images:
+  docker push timesheet
+
+You can deploy all your apps by running:
+  ../ocp/ocp-apply.sh
+OR
+  oc process -f ../ocp/registry/scc-config.yml | oc apply -f -
+  oc process -f ../ocp/timesheet/timesheet-mysql.yml | oc apply -f -
+  oc process -f ../ocp/timesheet/timesheet-deployment.yml | oc apply -f -
+
+Use these commands to find your application's IP addresses:
+  oc get svc timesheet

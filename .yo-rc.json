@@ -35,6 +35,17 @@
     "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": false,
-    "blueprints": []
+    "blueprints": [],
+    "appsFolders": ["timesheet"],
+    "directoryPath": "../",
+    "monitoring": "no",
+    "dockerRepositoryName": "",
+    "dockerPushCommand": "docker push",
+    "openshiftNamespace": "default",
+    "storageType": "persistent",
+    "registryReplicas": 2,
+    "herokuAppName": "timesheet-ag",
+    "herokuDeployType": "git",
+    "herokuJavaVersion": "11"
   }
 }
