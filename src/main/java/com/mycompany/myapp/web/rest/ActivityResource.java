@@ -105,6 +105,19 @@ public class ActivityResource {
     }
 
     /**
+     * {@code GET  /activities/:userId} : get the activities from the "userId".
+     *
+     * @param userId the user's activity to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with the list of activities in body
+     */
+    @GetMapping("/activities/{userId}")
+    public ResponseEntity<Activity> getActivityFromUser(@PathVariable Long userId) {
+        log.debug("REST request to get Activity by userId : {}", userId);
+        Optional<Activity> activity = activityRepository.findByUserId(userId);
+        return ResponseUtil.wrapOrNotFound(activity);
+    }
+
+    /**
      * {@code DELETE  /activities/:id} : delete the "id" activity.
      *
      * @param id the id of the activity to delete.

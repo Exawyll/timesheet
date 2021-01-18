@@ -26,4 +26,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     @Query("select activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks where activity.id =:id")
     Optional<Activity> findOneWithEagerRelationships(@Param("id") Long id);
+
+    List<Activity> findByUserId(Long userId);
 }
