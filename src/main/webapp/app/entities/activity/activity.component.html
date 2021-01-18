@@ -25,7 +25,7 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Time Spent</span></th>
                     <th scope="col" ><span>Project</span></th>
-                    <th scope="col" ><span>Employee</span></th>
+                    <th scope="col" ><span>User</span></th>
                     <th scope="col" ><span>Week</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -40,8 +40,8 @@
                         </span>
                     </td>
                     <td>
-                        <span *ngFor="let employee of activity.employees; let last = last">
-                            <a class="form-control-static" [routerLink]="['/employee', employee?.id, 'view']">{{ employee.firstName }}</a>{{ last ? '' : ', ' }}
+                        <span *ngFor="let user of activity.users; let last = last">
+                            {{ user.firstName }}{{ last ? '' : ', ' }}
                         </span>
                     </td>
                     <td>

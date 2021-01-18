@@ -18,7 +18,7 @@
                                  baseTableName="project_employee"
                                  constraintName="fk_project_employee_employee_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="employee"/>
+                                 referencedTableName="jhi_user"/>
         
     </changeSet>
 </databaseChangeLog>

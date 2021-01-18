@@ -25,7 +25,7 @@
   "relationships": [
     {
       "relationshipType": "many-to-many",
-      "otherEntityName": "employee",
+      "otherEntityName": "user",
       "otherEntityRelationshipName": "project",
       "relationshipName": "employee",
       "otherEntityField": "firstName",

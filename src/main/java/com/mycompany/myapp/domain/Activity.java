@@ -20,7 +20,8 @@ public class Activity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @Column(name = "time_spent")
@@ -35,10 +36,10 @@ public class Activity implements Serializable {
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "activity_employee",
+    @JoinTable(name = "activity_user",
                joinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
-    private Set<Employee> employees = new HashSet<>();
+               inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -94,29 +95,27 @@ public class Activity implements Serializable {
         this.projects = projects;
     }
 
-    public Set<Employee> getEmployees() {
-        return employees;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public Activity employees(Set<Employee> employees) {
-        this.employees = employees;
+    public Activity users(Set<User> users) {
+        this.users = users;
         return this;
     }
 
-    public Activity addEmployee(Employee employee) {
-        this.employees.add(employee);
-        employee.getActivities().add(this);
+    public Activity addUser(User user) {
+        this.users.add(user);
         return this;
     }
 
-    public Activity removeEmployee(Employee employee) {
-        this.employees.remove(employee);
-        employee.getActivities().remove(this);
+    public Activity removeUser(User user) {
+        this.users.remove(user);
         return this;
     }
 
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Set<Week> getWeeks() {

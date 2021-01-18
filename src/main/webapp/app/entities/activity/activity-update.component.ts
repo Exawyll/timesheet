@@ -9,12 +9,12 @@ import { IActivity, Activity } from 'app/shared/model/activity.model';
 import { ActivityService } from './activity.service';
 import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
-import { IEmployee } from 'app/shared/model/employee.model';
-import { EmployeeService } from 'app/entities/employee/employee.service';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 import { IWeek } from 'app/shared/model/week.model';
 import { WeekService } from 'app/entities/week/week.service';
 
-type SelectableEntity = IProject | IEmployee | IWeek;
+type SelectableEntity = IProject | IUser | IWeek;
 
 @Component({
   selector: 'jhi-activity-update',
@@ -23,21 +23,21 @@ type SelectableEntity = IProject | IEmployee | IWeek;
 export class ActivityUpdateComponent implements OnInit {
   isSaving = false;
   projects: IProject[] = [];
-  employees: IEmployee[] = [];
+  users: IUser[] = [];
   weeks: IWeek[] = [];
 
   editForm = this.fb.group({
     id: [],
     timeSpent: [],
     projects: [],
-    employees: [],
+    users: [],
     weeks: [],
   });
 
   constructor(
     protected activityService: ActivityService,
     protected projectService: ProjectService,
-    protected employeeService: EmployeeService,
+    protected userService: UserService,
     protected weekService: WeekService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -49,7 +49,7 @@ export class ActivityUpdateComponent implements OnInit {
 
       this.projectService.query().subscribe((res: HttpResponse<IProject[]>) => (this.projects = res.body || []));
 
-      this.employeeService.query().subscribe((res: HttpResponse<IEmployee[]>) => (this.employees = res.body || []));
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
 
       this.weekService.query().subscribe((res: HttpResponse<IWeek[]>) => (this.weeks = res.body || []));
     });
@@ -60,7 +60,7 @@ export class ActivityUpdateComponent implements OnInit {
       id: activity.id,
       timeSpent: activity.timeSpent,
       projects: activity.projects,
-      employees: activity.employees,
+      users: activity.users,
       weeks: activity.weeks,
     });
   }
@@ -85,7 +85,7 @@ export class ActivityUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       timeSpent: this.editForm.get(['timeSpent'])!.value,
       projects: this.editForm.get(['projects'])!.value,
-      employees: this.editForm.get(['employees'])!.value,
+      users: this.editForm.get(['users'])!.value,
       weeks: this.editForm.get(['weeks'])!.value,
     };
   }

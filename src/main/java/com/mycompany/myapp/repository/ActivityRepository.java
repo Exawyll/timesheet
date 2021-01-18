@@ -17,13 +17,13 @@ import java.util.Optional;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
-    @Query(value = "select distinct activity from Activity activity left join fetch activity.projects left join fetch activity.employees left join fetch activity.weeks",
+    @Query(value = "select distinct activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks",
         countQuery = "select count(distinct activity) from Activity activity")
     Page<Activity> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query("select distinct activity from Activity activity left join fetch activity.projects left join fetch activity.employees left join fetch activity.weeks")
+    @Query("select distinct activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks")
     List<Activity> findAllWithEagerRelationships();
 
-    @Query("select activity from Activity activity left join fetch activity.projects left join fetch activity.employees left join fetch activity.weeks where activity.id =:id")
+    @Query("select activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks where activity.id =:id")
     Optional<Activity> findOneWithEagerRelationships(@Param("id") Long id);
 }

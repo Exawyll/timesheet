@@ -6,14 +6,13 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-        <property name="autoIncrement" value="true"/>
-
+    
     <!--
         Added the entity Activity.
     -->
     <changeSet id="20210114132941-1" author="jhipster">
         <createTable tableName="activity">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="time_spent" type="bigint">
@@ -36,8 +35,8 @@
 
         <addPrimaryKey columnNames="activity_id, project_id" tableName="activity_project"/>
         
-        <createTable tableName="activity_employee">
-            <column name="employee_id" type="bigint">
+        <createTable tableName="activity_user">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="activity_id" type="bigint">
@@ -45,7 +44,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="activity_id, employee_id" tableName="activity_employee"/>
+        <addPrimaryKey columnNames="activity_id, user_id" tableName="activity_user"/>
         
         <createTable tableName="activity_week">
             <column name="week_id" type="bigint">

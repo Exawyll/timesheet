@@ -17,9 +17,9 @@
     },
     {
       "relationshipType": "many-to-many",
-      "otherEntityName": "employee",
+      "otherEntityName": "user",
       "otherEntityRelationshipName": "activity",
-      "relationshipName": "employee",
+      "relationshipName": "user",
       "otherEntityField": "firstName",
       "ownerSide": true
     },

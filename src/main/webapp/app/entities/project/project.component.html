@@ -42,7 +42,7 @@
                     <td>{{ project.isActive }}</td>
                     <td>
                         <span *ngFor="let employee of project.employees; let last = last">
-                            <a class="form-control-static" [routerLink]="['/employee', employee?.id, 'view']">{{ employee.firstName }}</a>{{ last ? '' : ', ' }}
+                            {{ employee.firstName }}{{ last ? '' : ', ' }}
                         </span>
                     </td>
                     <td class="text-right">

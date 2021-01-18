@@ -22,7 +22,8 @@ public class Project implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @Column(name = "name")
@@ -45,7 +46,7 @@ public class Project implements Serializable {
     @JoinTable(name = "project_employee",
                joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
-    private Set<Employee> employees = new HashSet<>();
+    private Set<User> employees = new HashSet<>();
 
     @ManyToMany(mappedBy = "projects")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -126,29 +127,27 @@ public class Project implements Serializable {
         this.isActive = isActive;
     }
 
-    public Set<Employee> getEmployees() {
+    public Set<User> getEmployees() {
         return employees;
     }
 
-    public Project employees(Set<Employee> employees) {
-        this.employees = employees;
+    public Project employees(Set<User> users) {
+        this.employees = users;
         return this;
     }
 
-    public Project addEmployee(Employee employee) {
-        this.employees.add(employee);
-        employee.getProjects().add(this);
+    public Project addEmployee(User user) {
+        this.employees.add(user);
         return this;
     }
 
-    public Project removeEmployee(Employee employee) {
-        this.employees.remove(employee);
-        employee.getProjects().remove(this);
+    public Project removeEmployee(User user) {
+        this.employees.remove(user);
         return this;
     }
 
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
+    public void setEmployees(Set<User> users) {
+        this.employees = users;
     }
 
     public Set<Activity> getActivities() {

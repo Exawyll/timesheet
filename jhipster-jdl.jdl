@@ -1,11 +1,3 @@
-
-entity Employee {
-	firstName String,
-    lastName String,
-    isActive Boolean,
-    team String
-}
-
 entity Project {
 	name String,
     description String,
@@ -28,10 +20,10 @@ entity Activity {
 
 relationship ManyToMany {
 	Activity{project(name)} to Project{activity},
-    Activity{employee(firstName)} to Employee{activity},
+    Activity{User(firstName)} to User,
     Activity{week(label)} to Week{activity}
 }
 
 relationship ManyToMany {
-	Project{employee(firstName)} to Employee{project}
+	Project{employee(firstName)} to User
 }

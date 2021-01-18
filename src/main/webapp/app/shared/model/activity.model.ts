@@ -1,12 +1,12 @@
 import { IProject } from 'app/shared/model/project.model';
-import { IEmployee } from 'app/shared/model/employee.model';
+import { IUser } from 'app/core/user/user.model';
 import { IWeek } from 'app/shared/model/week.model';
 
 export interface IActivity {
   id?: number;
   timeSpent?: number;
   projects?: IProject[];
-  employees?: IEmployee[];
+  users?: IUser[];
   weeks?: IWeek[];
 }
 
@@ -15,7 +15,7 @@ export class Activity implements IActivity {
     public id?: number,
     public timeSpent?: number,
     public projects?: IProject[],
-    public employees?: IEmployee[],
+    public users?: IUser[],
     public weeks?: IWeek[]
   ) {}
 }

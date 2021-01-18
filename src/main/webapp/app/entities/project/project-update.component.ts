@@ -9,8 +9,8 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { IProject, Project } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
-import { IEmployee } from 'app/shared/model/employee.model';
-import { EmployeeService } from 'app/entities/employee/employee.service';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-project-update',
@@ -18,7 +18,7 @@ import { EmployeeService } from 'app/entities/employee/employee.service';
 })
 export class ProjectUpdateComponent implements OnInit {
   isSaving = false;
-  employees: IEmployee[] = [];
+  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -32,7 +32,7 @@ export class ProjectUpdateComponent implements OnInit {
 
   constructor(
     protected projectService: ProjectService,
-    protected employeeService: EmployeeService,
+    protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -47,7 +47,7 @@ export class ProjectUpdateComponent implements OnInit {
 
       this.updateForm(project);
 
-      this.employeeService.query().subscribe((res: HttpResponse<IEmployee[]>) => (this.employees = res.body || []));
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
   }
 
@@ -106,11 +106,11 @@ export class ProjectUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IEmployee): any {
+  trackById(index: number, item: IUser): any {
     return item.id;
   }
 
-  getSelected(selectedVals: IEmployee[], option: IEmployee): IEmployee {
+  getSelected(selectedVals: IUser[], option: IUser): IUser {
     if (selectedVals) {
       for (let i = 0; i < selectedVals.length; i++) {
         if (option.id === selectedVals[i].id) {

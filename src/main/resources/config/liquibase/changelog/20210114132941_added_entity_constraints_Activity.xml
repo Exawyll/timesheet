@@ -21,16 +21,16 @@
                                  referencedTableName="project"/>
         
         <addForeignKeyConstraint baseColumnNames="activity_id"
-                                 baseTableName="activity_employee"
-                                 constraintName="fk_activity_employee_activity_id"
+                                 baseTableName="activity_user"
+                                 constraintName="fk_activity_user_activity_id"
                                  referencedColumnNames="id"
                                  referencedTableName="activity"/>
 
-        <addForeignKeyConstraint baseColumnNames="employee_id"
-                                 baseTableName="activity_employee"
-                                 constraintName="fk_activity_employee_employee_id"
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="activity_user"
+                                 constraintName="fk_activity_user_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="employee"/>
+                                 referencedTableName="jhi_user"/>
         
         <addForeignKeyConstraint baseColumnNames="activity_id"
                                  baseTableName="activity_week"

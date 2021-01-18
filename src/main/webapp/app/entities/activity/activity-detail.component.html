@@ -18,10 +18,10 @@
                         <a [routerLink]="['/project', project?.id, 'view']">{{ project.name }}</a>{{ last ? '' : ', ' }}
                     </span>
                 </dd>
-                <dt><span>Employee</span></dt>
+                <dt><span>User</span></dt>
                 <dd>
-                    <span *ngFor="let employee of activity.employees; let last = last">
-                        <a [routerLink]="['/employee', employee?.id, 'view']">{{ employee.firstName }}</a>{{ last ? '' : ', ' }}
+                    <span *ngFor="let user of activity.users; let last = last">
+                        {{ user.firstName }}{{ last ? '' : ', ' }}
                     </span>
                 </dd>
                 <dt><span>Week</span></dt>
