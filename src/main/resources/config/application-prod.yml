@@ -33,9 +33,9 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://axbmjseloizxcb:2ababebea53e6eb6b950cd0582a1db8c2d642a8b7789fd00da7acc5b5e8c65df@ec2-79-125-77-37.eu-west-1.compute.amazonaws.com:5432/d72ecrere8tmb7
-    username: axbmjseloizxcb
-    password: 2ababebea53e6eb6b950cd0582a1db8c2d642a8b7789fd00da7acc5b5e8c65df
+    url: jdbc:postgresql://localhost:5432/timesheet
+    username: timesheet
+    password:
     hikari:
       poolName: Hikari
       auto-commit: false
