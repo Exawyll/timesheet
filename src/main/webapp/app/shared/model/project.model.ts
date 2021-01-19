@@ -9,7 +9,7 @@ export interface IProject {
   startDate?: Moment;
   endDate?: Moment;
   isActive?: boolean;
-  employees?: IUser[];
+  users?: IUser[];
   activities?: IActivity[];
 }
 
@@ -21,7 +21,7 @@ export class Project implements IProject {
     public startDate?: Moment,
     public endDate?: Moment,
     public isActive?: boolean,
-    public employees?: IUser[],
+    public users?: IUser[],
     public activities?: IActivity[]
   ) {
     this.isActive = this.isActive || false;

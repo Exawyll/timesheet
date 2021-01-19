@@ -15,7 +15,7 @@ import java.util.Optional;
  * Spring Data  repository for the Activity entity.
  */
 @Repository
-public interface ActivityRepository extends JpaRepository<Activity, Long> {
+public interface ActivityRepository extends JpaRepository<Activity, Long>, JpaSpecificationExecutor<Activity> {
 
     @Query(value = "select distinct activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks",
         countQuery = "select count(distinct activity) from Activity activity")
@@ -26,6 +26,4 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     @Query("select activity from Activity activity left join fetch activity.projects left join fetch activity.users left join fetch activity.weeks where activity.id =:id")
     Optional<Activity> findOneWithEagerRelationships(@Param("id") Long id);
-
-    List<Activity> findByUserId(Long userId);
 }

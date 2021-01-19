@@ -28,7 +28,7 @@
                     <th scope="col" ><span>Start Date</span></th>
                     <th scope="col" ><span>End Date</span></th>
                     <th scope="col" ><span>Is Active</span></th>
-                    <th scope="col" ><span>Employee</span></th>
+                    <th scope="col" ><span>User</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -41,8 +41,8 @@
                     <td>{{ project.endDate | date:'medium' }}</td>
                     <td>{{ project.isActive }}</td>
                     <td>
-                        <span *ngFor="let employee of project.employees; let last = last">
-                            {{ employee.firstName }}{{ last ? '' : ', ' }}
+                        <span *ngFor="let user of project.users; let last = last">
+                            {{ user.firstName }}{{ last ? '' : ', ' }}
                         </span>
                     </td>
                     <td class="text-right">

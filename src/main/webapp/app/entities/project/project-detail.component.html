@@ -28,10 +28,10 @@
                 <dd>
                     <span>{{ project.isActive }}</span>
                 </dd>
-                <dt><span>Employee</span></dt>
+                <dt><span>User</span></dt>
                 <dd>
-                    <span *ngFor="let employee of project.employees; let last = last">
-                        {{ employee.firstName }}{{ last ? '' : ', ' }}
+                    <span *ngFor="let user of project.users; let last = last">
+                        {{ user.firstName }}{{ last ? '' : ', ' }}
                     </span>
                 </dd>
             </dl>

@@ -2,7 +2,13 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.TimesheetApp;
 import com.mycompany.myapp.domain.Activity;
+import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.Week;
 import com.mycompany.myapp.repository.ActivityRepository;
+import com.mycompany.myapp.service.ActivityService;
+import com.mycompany.myapp.service.dto.ActivityCriteria;
+import com.mycompany.myapp.service.ActivityQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,12 +45,22 @@ public class ActivityResourceIT {
 
     private static final Long DEFAULT_TIME_SPENT = 1L;
     private static final Long UPDATED_TIME_SPENT = 2L;
+    private static final Long SMALLER_TIME_SPENT = 1L - 1L;
 
     @Autowired
     private ActivityRepository activityRepository;
 
     @Mock
     private ActivityRepository activityRepositoryMock;
+
+    @Mock
+    private ActivityService activityServiceMock;
+
+    @Autowired
+    private ActivityService activityService;
+
+    @Autowired
+    private ActivityQueryService activityQueryService;
 
     @Autowired
     private EntityManager em;
@@ -135,22 +151,22 @@ public class ActivityResourceIT {
     
     @SuppressWarnings({"unchecked"})
     public void getAllActivitiesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(activityRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(activityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restActivityMockMvc.perform(get("/api/activities?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(activityRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(activityServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllActivitiesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(activityRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(activityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restActivityMockMvc.perform(get("/api/activities?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(activityRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(activityServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -166,6 +182,225 @@ public class ActivityResourceIT {
             .andExpect(jsonPath("$.id").value(activity.getId().intValue()))
             .andExpect(jsonPath("$.timeSpent").value(DEFAULT_TIME_SPENT.intValue()));
     }
+
+
+    @Test
+    @Transactional
+    public void getActivitiesByIdFiltering() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        Long id = activity.getId();
+
+        defaultActivityShouldBeFound("id.equals=" + id);
+        defaultActivityShouldNotBeFound("id.notEquals=" + id);
+
+        defaultActivityShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultActivityShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultActivityShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultActivityShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent equals to DEFAULT_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.equals=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent equals to UPDATED_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.equals=" + UPDATED_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent not equals to DEFAULT_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.notEquals=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent not equals to UPDATED_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.notEquals=" + UPDATED_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsInShouldWork() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent in DEFAULT_TIME_SPENT or UPDATED_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.in=" + DEFAULT_TIME_SPENT + "," + UPDATED_TIME_SPENT);
+
+        // Get all the activityList where timeSpent equals to UPDATED_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.in=" + UPDATED_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent is not null
+        defaultActivityShouldBeFound("timeSpent.specified=true");
+
+        // Get all the activityList where timeSpent is null
+        defaultActivityShouldNotBeFound("timeSpent.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent is greater than or equal to DEFAULT_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.greaterThanOrEqual=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent is greater than or equal to UPDATED_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.greaterThanOrEqual=" + UPDATED_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent is less than or equal to DEFAULT_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.lessThanOrEqual=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent is less than or equal to SMALLER_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.lessThanOrEqual=" + SMALLER_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsLessThanSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent is less than DEFAULT_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.lessThan=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent is less than UPDATED_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.lessThan=" + UPDATED_TIME_SPENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByTimeSpentIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+
+        // Get all the activityList where timeSpent is greater than DEFAULT_TIME_SPENT
+        defaultActivityShouldNotBeFound("timeSpent.greaterThan=" + DEFAULT_TIME_SPENT);
+
+        // Get all the activityList where timeSpent is greater than SMALLER_TIME_SPENT
+        defaultActivityShouldBeFound("timeSpent.greaterThan=" + SMALLER_TIME_SPENT);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByProjectIsEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+        Project project = ProjectResourceIT.createEntity(em);
+        em.persist(project);
+        em.flush();
+        activity.addProject(project);
+        activityRepository.saveAndFlush(activity);
+        Long projectId = project.getId();
+
+        // Get all the activityList where project equals to projectId
+        defaultActivityShouldBeFound("projectId.equals=" + projectId);
+
+        // Get all the activityList where project equals to projectId + 1
+        defaultActivityShouldNotBeFound("projectId.equals=" + (projectId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        activity.addUser(user);
+        activityRepository.saveAndFlush(activity);
+        Long userId = user.getId();
+
+        // Get all the activityList where user equals to userId
+        defaultActivityShouldBeFound("userId.equals=" + userId);
+
+        // Get all the activityList where user equals to userId + 1
+        defaultActivityShouldNotBeFound("userId.equals=" + (userId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllActivitiesByWeekIsEqualToSomething() throws Exception {
+        // Initialize the database
+        activityRepository.saveAndFlush(activity);
+        Week week = WeekResourceIT.createEntity(em);
+        em.persist(week);
+        em.flush();
+        activity.addWeek(week);
+        activityRepository.saveAndFlush(activity);
+        Long weekId = week.getId();
+
+        // Get all the activityList where week equals to weekId
+        defaultActivityShouldBeFound("weekId.equals=" + weekId);
+
+        // Get all the activityList where week equals to weekId + 1
+        defaultActivityShouldNotBeFound("weekId.equals=" + (weekId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultActivityShouldBeFound(String filter) throws Exception {
+        restActivityMockMvc.perform(get("/api/activities?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(activity.getId().intValue())))
+            .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.intValue())));
+
+        // Check, that the count call also returns 1
+        restActivityMockMvc.perform(get("/api/activities/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultActivityShouldNotBeFound(String filter) throws Exception {
+        restActivityMockMvc.perform(get("/api/activities?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restActivityMockMvc.perform(get("/api/activities/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
+    }
+
     @Test
     @Transactional
     public void getNonExistingActivity() throws Exception {
@@ -178,7 +413,7 @@ public class ActivityResourceIT {
     @Transactional
     public void updateActivity() throws Exception {
         // Initialize the database
-        activityRepository.saveAndFlush(activity);
+        activityService.save(activity);
 
         int databaseSizeBeforeUpdate = activityRepository.findAll().size();
 
@@ -221,7 +456,7 @@ public class ActivityResourceIT {
     @Transactional
     public void deleteActivity() throws Exception {
         // Initialize the database
-        activityRepository.saveAndFlush(activity);
+        activityService.save(activity);
 
         int databaseSizeBeforeDelete = activityRepository.findAll().size();
 

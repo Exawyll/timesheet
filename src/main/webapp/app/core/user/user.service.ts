@@ -20,7 +20,7 @@ export class UserService {
     return this.http.put<IUser>(this.resourceUrl, user);
   }
 
-  find(login: string): Observable<IUser> {
+  find(login: string | undefined): Observable<IUser> {
     return this.http.get<IUser>(`${this.resourceUrl}/${login}`);
   }
 

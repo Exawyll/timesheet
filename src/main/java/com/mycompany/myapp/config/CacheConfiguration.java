@@ -56,6 +56,7 @@ public class CacheConfiguration {
             createCache(cm, com.mycompany.myapp.domain.Activity.class.getName() + ".weeks");
             createCache(cm, com.mycompany.myapp.domain.Week.class.getName());
             createCache(cm, com.mycompany.myapp.domain.Week.class.getName() + ".activities");
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".users");
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -43,10 +43,10 @@ public class Project implements Serializable {
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "project_employee",
+    @JoinTable(name = "project_user",
                joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
-    private Set<User> employees = new HashSet<>();
+               inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany(mappedBy = "projects")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -127,27 +127,27 @@ public class Project implements Serializable {
         this.isActive = isActive;
     }
 
-    public Set<User> getEmployees() {
-        return employees;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public Project employees(Set<User> users) {
-        this.employees = users;
+    public Project users(Set<User> users) {
+        this.users = users;
         return this;
     }
 
-    public Project addEmployee(User user) {
-        this.employees.add(user);
+    public Project addUser(User user) {
+        this.users.add(user);
         return this;
     }
 
-    public Project removeEmployee(User user) {
-        this.employees.remove(user);
+    public Project removeUser(User user) {
+        this.users.remove(user);
         return this;
     }
 
-    public void setEmployees(Set<User> users) {
-        this.employees = users;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Set<Activity> getActivities() {

@@ -25,5 +25,7 @@ relationship ManyToMany {
 }
 
 relationship ManyToMany {
-	Project{employee(firstName)} to User
+	Project{User(firstName)} to User
 }
+
+filter Activity

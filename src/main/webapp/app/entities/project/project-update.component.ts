@@ -27,7 +27,7 @@ export class ProjectUpdateComponent implements OnInit {
     startDate: [],
     endDate: [],
     isActive: [],
-    employees: [],
+    users: [],
   });
 
   constructor(
@@ -59,7 +59,7 @@ export class ProjectUpdateComponent implements OnInit {
       startDate: project.startDate ? project.startDate.format(DATE_TIME_FORMAT) : null,
       endDate: project.endDate ? project.endDate.format(DATE_TIME_FORMAT) : null,
       isActive: project.isActive,
-      employees: project.employees,
+      users: project.users,
     });
   }
 
@@ -86,7 +86,7 @@ export class ProjectUpdateComponent implements OnInit {
       startDate: this.editForm.get(['startDate'])!.value ? moment(this.editForm.get(['startDate'])!.value, DATE_TIME_FORMAT) : undefined,
       endDate: this.editForm.get(['endDate'])!.value ? moment(this.editForm.get(['endDate'])!.value, DATE_TIME_FORMAT) : undefined,
       isActive: this.editForm.get(['isActive'])!.value,
-      employees: this.editForm.get(['employees'])!.value,
+      users: this.editForm.get(['users'])!.value,
     };
   }
 

@@ -1,8 +1,10 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Activity;
-import com.mycompany.myapp.repository.ActivityRepository;
+import com.mycompany.myapp.service.ActivityService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import com.mycompany.myapp.service.dto.ActivityCriteria;
+import com.mycompany.myapp.service.ActivityQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,7 +24,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ActivityResource {
 
     private final Logger log = LoggerFactory.getLogger(ActivityResource.class);
@@ -33,10 +33,13 @@ public class ActivityResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ActivityRepository activityRepository;
+    private final ActivityService activityService;
 
-    public ActivityResource(ActivityRepository activityRepository) {
-        this.activityRepository = activityRepository;
+    private final ActivityQueryService activityQueryService;
+
+    public ActivityResource(ActivityService activityService, ActivityQueryService activityQueryService) {
+        this.activityService = activityService;
+        this.activityQueryService = activityQueryService;
     }
 
     /**
@@ -52,7 +55,7 @@ public class ActivityResource {
         if (activity.getId() != null) {
             throw new BadRequestAlertException("A new activity cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Activity result = activityRepository.save(activity);
+        Activity result = activityService.save(activity);
         return ResponseEntity.created(new URI("/api/activities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -73,7 +76,7 @@ public class ActivityResource {
         if (activity.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Activity result = activityRepository.save(activity);
+        Activity result = activityService.save(activity);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, activity.getId().toString()))
             .body(result);
@@ -82,13 +85,26 @@ public class ActivityResource {
     /**
      * {@code GET  /activities} : get all the activities.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of activities in body.
      */
     @GetMapping("/activities")
-    public List<Activity> getAllActivities(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
-        log.debug("REST request to get all Activities");
-        return activityRepository.findAllWithEagerRelationships();
+    public ResponseEntity<List<Activity>> getAllActivities(ActivityCriteria criteria) {
+        log.debug("REST request to get Activities by criteria: {}", criteria);
+        List<Activity> entityList = activityQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /activities/count} : count all the activities.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/activities/count")
+    public ResponseEntity<Long> countActivities(ActivityCriteria criteria) {
+        log.debug("REST request to count Activities by criteria: {}", criteria);
+        return ResponseEntity.ok().body(activityQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -100,20 +116,7 @@ public class ActivityResource {
     @GetMapping("/activities/{id}")
     public ResponseEntity<Activity> getActivity(@PathVariable Long id) {
         log.debug("REST request to get Activity : {}", id);
-        Optional<Activity> activity = activityRepository.findOneWithEagerRelationships(id);
-        return ResponseUtil.wrapOrNotFound(activity);
-    }
-
-    /**
-     * {@code GET  /activities/:userId} : get the activities from the "userId".
-     *
-     * @param userId the user's activity to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with the list of activities in body
-     */
-    @GetMapping("/activities/{userId}")
-    public ResponseEntity<Activity> getActivityFromUser(@PathVariable Long userId) {
-        log.debug("REST request to get Activity by userId : {}", userId);
-        Optional<Activity> activity = activityRepository.findByUserId(userId);
+        Optional<Activity> activity = activityService.findOne(id);
         return ResponseUtil.wrapOrNotFound(activity);
     }
 
@@ -126,7 +129,7 @@ public class ActivityResource {
     @DeleteMapping("/activities/{id}")
     public ResponseEntity<Void> deleteActivity(@PathVariable Long id) {
         log.debug("REST request to delete Activity : {}", id);
-        activityRepository.deleteById(id);
+        activityService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }
