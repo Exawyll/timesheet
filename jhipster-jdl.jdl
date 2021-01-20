@@ -29,3 +29,4 @@ relationship ManyToMany {
 }
 
 filter Activity
+filter Project

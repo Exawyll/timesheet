@@ -2,7 +2,12 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.TimesheetApp;
 import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.Activity;
 import com.mycompany.myapp.repository.ProjectRepository;
+import com.mycompany.myapp.service.ProjectService;
+import com.mycompany.myapp.service.dto.ProjectCriteria;
+import com.mycompany.myapp.service.ProjectQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,6 +64,15 @@ public class ProjectResourceIT {
 
     @Mock
     private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private ProjectQueryService projectQueryService;
 
     @Autowired
     private EntityManager em;
@@ -165,22 +179,22 @@ public class ProjectResourceIT {
     
     @SuppressWarnings({"unchecked"})
     public void getAllProjectsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(projectRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(projectRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllProjectsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(projectRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(projectRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -200,6 +214,416 @@ public class ProjectResourceIT {
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.isActive").value(DEFAULT_IS_ACTIVE.booleanValue()));
     }
+
+
+    @Test
+    @Transactional
+    public void getProjectsByIdFiltering() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        Long id = project.getId();
+
+        defaultProjectShouldBeFound("id.equals=" + id);
+        defaultProjectShouldNotBeFound("id.notEquals=" + id);
+
+        defaultProjectShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultProjectShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultProjectShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultProjectShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllProjectsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name equals to DEFAULT_NAME
+        defaultProjectShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the projectList where name equals to UPDATED_NAME
+        defaultProjectShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name not equals to DEFAULT_NAME
+        defaultProjectShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the projectList where name not equals to UPDATED_NAME
+        defaultProjectShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultProjectShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the projectList where name equals to UPDATED_NAME
+        defaultProjectShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name is not null
+        defaultProjectShouldBeFound("name.specified=true");
+
+        // Get all the projectList where name is null
+        defaultProjectShouldNotBeFound("name.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllProjectsByNameContainsSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name contains DEFAULT_NAME
+        defaultProjectShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the projectList where name contains UPDATED_NAME
+        defaultProjectShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where name does not contain DEFAULT_NAME
+        defaultProjectShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the projectList where name does not contain UPDATED_NAME
+        defaultProjectShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllProjectsByDescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description equals to DEFAULT_DESCRIPTION
+        defaultProjectShouldBeFound("description.equals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the projectList where description equals to UPDATED_DESCRIPTION
+        defaultProjectShouldNotBeFound("description.equals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByDescriptionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description not equals to DEFAULT_DESCRIPTION
+        defaultProjectShouldNotBeFound("description.notEquals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the projectList where description not equals to UPDATED_DESCRIPTION
+        defaultProjectShouldBeFound("description.notEquals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByDescriptionIsInShouldWork() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description in DEFAULT_DESCRIPTION or UPDATED_DESCRIPTION
+        defaultProjectShouldBeFound("description.in=" + DEFAULT_DESCRIPTION + "," + UPDATED_DESCRIPTION);
+
+        // Get all the projectList where description equals to UPDATED_DESCRIPTION
+        defaultProjectShouldNotBeFound("description.in=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByDescriptionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description is not null
+        defaultProjectShouldBeFound("description.specified=true");
+
+        // Get all the projectList where description is null
+        defaultProjectShouldNotBeFound("description.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllProjectsByDescriptionContainsSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description contains DEFAULT_DESCRIPTION
+        defaultProjectShouldBeFound("description.contains=" + DEFAULT_DESCRIPTION);
+
+        // Get all the projectList where description contains UPDATED_DESCRIPTION
+        defaultProjectShouldNotBeFound("description.contains=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByDescriptionNotContainsSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where description does not contain DEFAULT_DESCRIPTION
+        defaultProjectShouldNotBeFound("description.doesNotContain=" + DEFAULT_DESCRIPTION);
+
+        // Get all the projectList where description does not contain UPDATED_DESCRIPTION
+        defaultProjectShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllProjectsByStartDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where startDate equals to DEFAULT_START_DATE
+        defaultProjectShouldBeFound("startDate.equals=" + DEFAULT_START_DATE);
+
+        // Get all the projectList where startDate equals to UPDATED_START_DATE
+        defaultProjectShouldNotBeFound("startDate.equals=" + UPDATED_START_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByStartDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where startDate not equals to DEFAULT_START_DATE
+        defaultProjectShouldNotBeFound("startDate.notEquals=" + DEFAULT_START_DATE);
+
+        // Get all the projectList where startDate not equals to UPDATED_START_DATE
+        defaultProjectShouldBeFound("startDate.notEquals=" + UPDATED_START_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByStartDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where startDate in DEFAULT_START_DATE or UPDATED_START_DATE
+        defaultProjectShouldBeFound("startDate.in=" + DEFAULT_START_DATE + "," + UPDATED_START_DATE);
+
+        // Get all the projectList where startDate equals to UPDATED_START_DATE
+        defaultProjectShouldNotBeFound("startDate.in=" + UPDATED_START_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByStartDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where startDate is not null
+        defaultProjectShouldBeFound("startDate.specified=true");
+
+        // Get all the projectList where startDate is null
+        defaultProjectShouldNotBeFound("startDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByEndDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where endDate equals to DEFAULT_END_DATE
+        defaultProjectShouldBeFound("endDate.equals=" + DEFAULT_END_DATE);
+
+        // Get all the projectList where endDate equals to UPDATED_END_DATE
+        defaultProjectShouldNotBeFound("endDate.equals=" + UPDATED_END_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByEndDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where endDate not equals to DEFAULT_END_DATE
+        defaultProjectShouldNotBeFound("endDate.notEquals=" + DEFAULT_END_DATE);
+
+        // Get all the projectList where endDate not equals to UPDATED_END_DATE
+        defaultProjectShouldBeFound("endDate.notEquals=" + UPDATED_END_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByEndDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where endDate in DEFAULT_END_DATE or UPDATED_END_DATE
+        defaultProjectShouldBeFound("endDate.in=" + DEFAULT_END_DATE + "," + UPDATED_END_DATE);
+
+        // Get all the projectList where endDate equals to UPDATED_END_DATE
+        defaultProjectShouldNotBeFound("endDate.in=" + UPDATED_END_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByEndDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where endDate is not null
+        defaultProjectShouldBeFound("endDate.specified=true");
+
+        // Get all the projectList where endDate is null
+        defaultProjectShouldNotBeFound("endDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByIsActiveIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where isActive equals to DEFAULT_IS_ACTIVE
+        defaultProjectShouldBeFound("isActive.equals=" + DEFAULT_IS_ACTIVE);
+
+        // Get all the projectList where isActive equals to UPDATED_IS_ACTIVE
+        defaultProjectShouldNotBeFound("isActive.equals=" + UPDATED_IS_ACTIVE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByIsActiveIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where isActive not equals to DEFAULT_IS_ACTIVE
+        defaultProjectShouldNotBeFound("isActive.notEquals=" + DEFAULT_IS_ACTIVE);
+
+        // Get all the projectList where isActive not equals to UPDATED_IS_ACTIVE
+        defaultProjectShouldBeFound("isActive.notEquals=" + UPDATED_IS_ACTIVE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByIsActiveIsInShouldWork() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where isActive in DEFAULT_IS_ACTIVE or UPDATED_IS_ACTIVE
+        defaultProjectShouldBeFound("isActive.in=" + DEFAULT_IS_ACTIVE + "," + UPDATED_IS_ACTIVE);
+
+        // Get all the projectList where isActive equals to UPDATED_IS_ACTIVE
+        defaultProjectShouldNotBeFound("isActive.in=" + UPDATED_IS_ACTIVE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByIsActiveIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+
+        // Get all the projectList where isActive is not null
+        defaultProjectShouldBeFound("isActive.specified=true");
+
+        // Get all the projectList where isActive is null
+        defaultProjectShouldNotBeFound("isActive.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllProjectsByUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        project.addUser(user);
+        projectRepository.saveAndFlush(project);
+        Long userId = user.getId();
+
+        // Get all the projectList where user equals to userId
+        defaultProjectShouldBeFound("userId.equals=" + userId);
+
+        // Get all the projectList where user equals to userId + 1
+        defaultProjectShouldNotBeFound("userId.equals=" + (userId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllProjectsByActivityIsEqualToSomething() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+        Activity activity = ActivityResourceIT.createEntity(em);
+        em.persist(activity);
+        em.flush();
+        project.addActivity(activity);
+        projectRepository.saveAndFlush(project);
+        Long activityId = activity.getId();
+
+        // Get all the projectList where activity equals to activityId
+        defaultProjectShouldBeFound("activityId.equals=" + activityId);
+
+        // Get all the projectList where activity equals to activityId + 1
+        defaultProjectShouldNotBeFound("activityId.equals=" + (activityId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultProjectShouldBeFound(String filter) throws Exception {
+        restProjectMockMvc.perform(get("/api/projects?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(project.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
+            .andExpect(jsonPath("$.[*].isActive").value(hasItem(DEFAULT_IS_ACTIVE.booleanValue())));
+
+        // Check, that the count call also returns 1
+        restProjectMockMvc.perform(get("/api/projects/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultProjectShouldNotBeFound(String filter) throws Exception {
+        restProjectMockMvc.perform(get("/api/projects?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restProjectMockMvc.perform(get("/api/projects/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
+    }
+
     @Test
     @Transactional
     public void getNonExistingProject() throws Exception {
@@ -212,7 +636,7 @@ public class ProjectResourceIT {
     @Transactional
     public void updateProject() throws Exception {
         // Initialize the database
-        projectRepository.saveAndFlush(project);
+        projectService.save(project);
 
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
@@ -263,7 +687,7 @@ public class ProjectResourceIT {
     @Transactional
     public void deleteProject() throws Exception {
         // Initialize the database
-        projectRepository.saveAndFlush(project);
+        projectService.save(project);
 
         int databaseSizeBeforeDelete = projectRepository.findAll().size();
 

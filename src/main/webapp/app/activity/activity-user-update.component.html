@@ -1,0 +1,53 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-activity-heading">Create or edit a Activity</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_timeSpent">Time Spent</label>
+                    <input type="number" class="form-control" name="timeSpent" id="field_timeSpent"
+                           formControlName="timeSpent"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_projects">Project</label>
+                    <select class="form-control" id="field_projects" multiple name="projects" formControlName="projects">
+                        <option [ngValue]="getSelected(editForm.get('projects')!.value, projectOption)" *ngFor="let projectOption of projects; trackBy: trackById">{{ projectOption.name }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_users">User</label>
+                    <select class="form-control" id="field_users" multiple name="users" formControlName="users">
+                        <option [ngValue]="getSelected(editForm.get('users')!.value, userOption)" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.firstName }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_weeks">Week</label>
+                    <select class="form-control" id="field_weeks" multiple name="weeks" formControlName="weeks">
+                        <option [ngValue]="getSelected(editForm.get('weeks')!.value, weekOption)" *ngFor="let weekOption of weeks; trackBy: trackById">{{ weekOption.label }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
