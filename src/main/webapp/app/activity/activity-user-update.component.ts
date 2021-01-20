@@ -9,7 +9,7 @@ import { IActivity, Activity } from 'app/shared/model/activity.model';
 import { ActivityUserService } from './activity-user.service';
 import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
-import { IUser, User } from 'app/core/user/user.model';
+import { IUser } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
 import { IWeek } from 'app/shared/model/week.model';
 import { WeekService } from 'app/entities/week/week.service';

@@ -12,9 +12,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_timeSpent">Time Spent</label>
-                    <input type="number" class="form-control" name="timeSpent" id="field_timeSpent"
-                           formControlName="timeSpent"/>
+                    <label class="form-control-label" for="field_user">Collaborateur</label>
+                    <select class="form-control" id="field_user" name="user" formControlName="user">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === editForm.get('user')!.value?.id ? editForm.get('user')!.value : userOption" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.firstName }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_week">Semaine</label>
+                    <select class="form-control" id="field_week" name="week" formControlName="week">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="weekOption.id === editForm.get('week')!.value?.id ? editForm.get('week')!.value : weekOption" *ngFor="let weekOption of weeks; trackBy: trackById">{{weekOption.year}} - {{ weekOption.label }} - {{ weekOption.monthNum }}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -26,19 +36,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_user">User</label>
-                    <select class="form-control" id="field_user" name="user" formControlName="user">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === editForm.get('user')!.value?.id ? editForm.get('user')!.value : userOption" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.firstName }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_week">Week</label>
-                    <select class="form-control" id="field_week" name="week" formControlName="week">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="weekOption.id === editForm.get('week')!.value?.id ? editForm.get('week')!.value : weekOption" *ngFor="let weekOption of weeks; trackBy: trackById">{{ weekOption.label }}</option>
-                    </select>
+                    <label class="form-control-label" for="field_timeSpent">Time Spent</label>
+                    <input type="number" class="form-control" name="timeSpent" id="field_timeSpent"
+                           formControlName="timeSpent" min="0" max="5"/>
                 </div>
             </div>
 
