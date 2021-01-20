@@ -1,14 +1,11 @@
 package com.mycompany.myapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Week.
@@ -39,11 +36,6 @@ public class Week implements Serializable {
 
     @Column(name = "is_active")
     private Boolean isActive;
-
-    @ManyToMany(mappedBy = "weeks")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<Activity> activities = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -117,31 +109,6 @@ public class Week implements Serializable {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    public Set<Activity> getActivities() {
-        return activities;
-    }
-
-    public Week activities(Set<Activity> activities) {
-        this.activities = activities;
-        return this;
-    }
-
-    public Week addActivity(Activity activity) {
-        this.activities.add(activity);
-        activity.getWeeks().add(this);
-        return this;
-    }
-
-    public Week removeActivity(Activity activity) {
-        this.activities.remove(activity);
-        activity.getWeeks().remove(this);
-        return this;
-    }
-
-    public void setActivities(Set<Activity> activities) {
-        this.activities = activities;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

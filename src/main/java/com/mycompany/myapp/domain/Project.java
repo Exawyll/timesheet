@@ -1,6 +1,6 @@
 package com.mycompany.myapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,8 +8,6 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Project.
@@ -41,17 +39,9 @@ public class Project implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "project_user",
-               joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> users = new HashSet<>();
-
-    @ManyToMany(mappedBy = "projects")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<Activity> activities = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = "projects", allowSetters = true)
+    private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -127,52 +117,17 @@ public class Project implements Serializable {
         this.isActive = isActive;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public Project users(Set<User> users) {
-        this.users = users;
+    public Project user(User user) {
+        this.user = user;
         return this;
     }
 
-    public Project addUser(User user) {
-        this.users.add(user);
-        return this;
-    }
-
-    public Project removeUser(User user) {
-        this.users.remove(user);
-        return this;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public Set<Activity> getActivities() {
-        return activities;
-    }
-
-    public Project activities(Set<Activity> activities) {
-        this.activities = activities;
-        return this;
-    }
-
-    public Project addActivity(Activity activity) {
-        this.activities.add(activity);
-        activity.getProjects().add(this);
-        return this;
-    }
-
-    public Project removeActivity(Activity activity) {
-        this.activities.remove(activity);
-        activity.getProjects().remove(this);
-        return this;
-    }
-
-    public void setActivities(Set<Activity> activities) {
-        this.activities = activities;
+    public void setUser(User user) {
+        this.user = user;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

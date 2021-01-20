@@ -5,8 +5,6 @@ import com.mycompany.myapp.repository.ActivityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,18 +45,9 @@ public class ActivityService {
     @Transactional(readOnly = true)
     public List<Activity> findAll() {
         log.debug("Request to get all Activities");
-        return activityRepository.findAllWithEagerRelationships();
+        return activityRepository.findAll();
     }
 
-
-    /**
-     * Get all the activities with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<Activity> findAllWithEagerRelationships(Pageable pageable) {
-        return activityRepository.findAllWithEagerRelationships(pageable);
-    }
 
     /**
      * Get one activity by id.
@@ -69,7 +58,7 @@ public class ActivityService {
     @Transactional(readOnly = true)
     public Optional<Activity> findOne(Long id) {
         log.debug("Request to get Activity : {}", id);
-        return activityRepository.findOneWithEagerRelationships(id);
+        return activityRepository.findById(id);
     }
 
     /**

@@ -1,6 +1,5 @@
 import { Moment } from 'moment';
 import { IUser } from 'app/core/user/user.model';
-import { IActivity } from 'app/shared/model/activity.model';
 
 export interface IProject {
   id?: number;
@@ -9,8 +8,7 @@ export interface IProject {
   startDate?: Moment;
   endDate?: Moment;
   isActive?: boolean;
-  users?: IUser[];
-  activities?: IActivity[];
+  user?: IUser;
 }
 
 export class Project implements IProject {
@@ -21,8 +19,7 @@ export class Project implements IProject {
     public startDate?: Moment,
     public endDate?: Moment,
     public isActive?: boolean,
-    public users?: IUser[],
-    public activities?: IActivity[]
+    public user?: IUser
   ) {
     this.isActive = this.isActive || false;
   }

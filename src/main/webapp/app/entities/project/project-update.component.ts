@@ -27,7 +27,7 @@ export class ProjectUpdateComponent implements OnInit {
     startDate: [],
     endDate: [],
     isActive: [],
-    users: [],
+    user: [],
   });
 
   constructor(
@@ -59,7 +59,7 @@ export class ProjectUpdateComponent implements OnInit {
       startDate: project.startDate ? project.startDate.format(DATE_TIME_FORMAT) : null,
       endDate: project.endDate ? project.endDate.format(DATE_TIME_FORMAT) : null,
       isActive: project.isActive,
-      users: project.users,
+      user: project.user,
     });
   }
 
@@ -86,7 +86,7 @@ export class ProjectUpdateComponent implements OnInit {
       startDate: this.editForm.get(['startDate'])!.value ? moment(this.editForm.get(['startDate'])!.value, DATE_TIME_FORMAT) : undefined,
       endDate: this.editForm.get(['endDate'])!.value ? moment(this.editForm.get(['endDate'])!.value, DATE_TIME_FORMAT) : undefined,
       isActive: this.editForm.get(['isActive'])!.value,
-      users: this.editForm.get(['users'])!.value,
+      user: this.editForm.get(['user'])!.value,
     };
   }
 
@@ -108,16 +108,5 @@ export class ProjectUpdateComponent implements OnInit {
 
   trackById(index: number, item: IUser): any {
     return item.id;
-  }
-
-  getSelected(selectedVals: IUser[], option: IUser): IUser {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 }

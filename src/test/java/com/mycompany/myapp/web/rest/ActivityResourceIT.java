@@ -12,25 +12,18 @@ import com.mycompany.myapp.service.ActivityQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link ActivityResource} REST controller.
  */
 @SpringBootTest(classes = TimesheetApp.class)
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class ActivityResourceIT {
@@ -49,12 +41,6 @@ public class ActivityResourceIT {
 
     @Autowired
     private ActivityRepository activityRepository;
-
-    @Mock
-    private ActivityRepository activityRepositoryMock;
-
-    @Mock
-    private ActivityService activityServiceMock;
 
     @Autowired
     private ActivityService activityService;
@@ -149,26 +135,6 @@ public class ActivityResourceIT {
             .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.intValue())));
     }
     
-    @SuppressWarnings({"unchecked"})
-    public void getAllActivitiesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(activityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restActivityMockMvc.perform(get("/api/activities?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(activityServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public void getAllActivitiesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(activityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restActivityMockMvc.perform(get("/api/activities?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(activityServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
     @Test
     @Transactional
     public void getActivity() throws Exception {
@@ -316,7 +282,7 @@ public class ActivityResourceIT {
         Project project = ProjectResourceIT.createEntity(em);
         em.persist(project);
         em.flush();
-        activity.addProject(project);
+        activity.setProject(project);
         activityRepository.saveAndFlush(activity);
         Long projectId = project.getId();
 
@@ -336,7 +302,7 @@ public class ActivityResourceIT {
         User user = UserResourceIT.createEntity(em);
         em.persist(user);
         em.flush();
-        activity.addUser(user);
+        activity.setUser(user);
         activityRepository.saveAndFlush(activity);
         Long userId = user.getId();
 
@@ -356,7 +322,7 @@ public class ActivityResourceIT {
         Week week = WeekResourceIT.createEntity(em);
         em.persist(week);
         em.flush();
-        activity.addWeek(week);
+        activity.setWeek(week);
         activityRepository.saveAndFlush(activity);
         Long weekId = week.getId();
 

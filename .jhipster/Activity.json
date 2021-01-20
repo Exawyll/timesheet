@@ -8,28 +8,25 @@
   ],
   "relationships": [
     {
-      "relationshipType": "many-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityName": "project",
       "otherEntityRelationshipName": "activity",
       "relationshipName": "project",
-      "otherEntityField": "name",
-      "ownerSide": true
+      "otherEntityField": "name"
     },
     {
-      "relationshipType": "many-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityName": "user",
       "otherEntityRelationshipName": "activity",
       "relationshipName": "user",
-      "otherEntityField": "firstName",
-      "ownerSide": true
+      "otherEntityField": "firstName"
     },
     {
-      "relationshipType": "many-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityName": "week",
       "otherEntityRelationshipName": "activity",
       "relationshipName": "week",
-      "otherEntityField": "label",
-      "ownerSide": true
+      "otherEntityField": "label"
     }
   ],
   "changelogDate": "20210114132941",

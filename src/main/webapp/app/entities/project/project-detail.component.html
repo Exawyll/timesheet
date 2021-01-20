@@ -30,9 +30,7 @@
                 </dd>
                 <dt><span>User</span></dt>
                 <dd>
-                    <span *ngFor="let user of project.users; let last = last">
-                        {{ user.firstName }}{{ last ? '' : ', ' }}
-                    </span>
+                    {{ project.user?.firstName }}
                 </dd>
             </dl>
 

@@ -22,16 +22,7 @@
       "fieldType": "Boolean"
     }
   ],
-  "relationships": [
-    {
-      "relationshipType": "many-to-many",
-      "otherEntityName": "activity",
-      "otherEntityRelationshipName": "week",
-      "relationshipName": "activity",
-      "otherEntityField": "id",
-      "ownerSide": false
-    }
-  ],
+  "relationships": [],
   "changelogDate": "20210114132841",
   "entityTableName": "week",
   "dto": "no",

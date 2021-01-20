@@ -18,45 +18,21 @@
             <column name="time_spent" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="project_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="week_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
 
     <changeSet id="20210114132941-1-relations" author="jhipster">
 
-        <createTable tableName="activity_project">
-            <column name="project_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="activity_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="activity_id, project_id" tableName="activity_project"/>
-        
-        <createTable tableName="activity_user">
-            <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="activity_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="activity_id, user_id" tableName="activity_user"/>
-        
-        <createTable tableName="activity_week">
-            <column name="week_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="activity_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="activity_id, week_id" tableName="activity_week"/>
-        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 

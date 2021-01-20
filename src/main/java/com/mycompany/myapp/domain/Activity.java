@@ -1,13 +1,12 @@
 package com.mycompany.myapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Activity.
@@ -27,26 +26,17 @@ public class Activity implements Serializable {
     @Column(name = "time_spent")
     private Long timeSpent;
 
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "activity_project",
-               joinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
-    private Set<Project> projects = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = "activities", allowSetters = true)
+    private Project project;
 
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "activity_user",
-               joinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> users = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = "activities", allowSetters = true)
+    private User user;
 
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "activity_week",
-               joinColumns = @JoinColumn(name = "activity_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "week_id", referencedColumnName = "id"))
-    private Set<Week> weeks = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties(value = "activities", allowSetters = true)
+    private Week week;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -70,77 +60,43 @@ public class Activity implements Serializable {
         this.timeSpent = timeSpent;
     }
 
-    public Set<Project> getProjects() {
-        return projects;
+    public Project getProject() {
+        return project;
     }
 
-    public Activity projects(Set<Project> projects) {
-        this.projects = projects;
+    public Activity project(Project project) {
+        this.project = project;
         return this;
     }
 
-    public Activity addProject(Project project) {
-        this.projects.add(project);
-        project.getActivities().add(this);
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Activity user(User user) {
+        this.user = user;
         return this;
     }
 
-    public Activity removeProject(Project project) {
-        this.projects.remove(project);
-        project.getActivities().remove(this);
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Week getWeek() {
+        return week;
+    }
+
+    public Activity week(Week week) {
+        this.week = week;
         return this;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public Activity users(Set<User> users) {
-        this.users = users;
-        return this;
-    }
-
-    public Activity addUser(User user) {
-        this.users.add(user);
-        return this;
-    }
-
-    public Activity removeUser(User user) {
-        this.users.remove(user);
-        return this;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public Set<Week> getWeeks() {
-        return weeks;
-    }
-
-    public Activity weeks(Set<Week> weeks) {
-        this.weeks = weeks;
-        return this;
-    }
-
-    public Activity addWeek(Week week) {
-        this.weeks.add(week);
-        week.getActivities().add(this);
-        return this;
-    }
-
-    public Activity removeWeek(Week week) {
-        this.weeks.remove(week);
-        week.getActivities().remove(this);
-        return this;
-    }
-
-    public void setWeeks(Set<Week> weeks) {
-        this.weeks = weeks;
+    public void setWeek(Week week) {
+        this.week = week;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

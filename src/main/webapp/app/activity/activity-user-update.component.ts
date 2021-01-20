@@ -30,9 +30,9 @@ export class ActivityUserUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     timeSpent: [],
-    projects: [],
-    users: [],
-    weeks: [],
+    project: [],
+    user: [],
+    week: [],
   });
 
   constructor(
@@ -64,9 +64,9 @@ export class ActivityUserUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: activity.id,
       timeSpent: activity.timeSpent,
-      projects: activity.projects,
-      users: activity.users,
-      weeks: activity.weeks,
+      project: activity.project,
+      user: activity.user,
+      week: activity.week,
     });
   }
 
@@ -89,9 +89,9 @@ export class ActivityUserUpdateComponent implements OnInit {
       ...new Activity(),
       id: this.editForm.get(['id'])!.value,
       timeSpent: this.editForm.get(['timeSpent'])!.value,
-      projects: this.editForm.get(['projects'])!.value,
-      users: this.editForm.get(['users'])!.value,
-      weeks: this.editForm.get(['weeks'])!.value,
+      project: this.editForm.get(['project'])!.value,
+      user: this.editForm.get(['user'])!.value,
+      week: this.editForm.get(['week'])!.value,
     };
   }
 
@@ -113,16 +113,5 @@ export class ActivityUserUpdateComponent implements OnInit {
 
   trackById(index: number, item: SelectableEntity): any {
     return item.id;
-  }
-
-  getSelected(selectedVals: SelectableEntity[], option: SelectableEntity): SelectableEntity {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 }

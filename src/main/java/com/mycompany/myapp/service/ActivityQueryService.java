@@ -90,15 +90,15 @@ public class ActivityQueryService extends QueryService<Activity> {
             }
             if (criteria.getProjectId() != null) {
                 specification = specification.and(buildSpecification(criteria.getProjectId(),
-                    root -> root.join(Activity_.projects, JoinType.LEFT).get(Project_.id)));
+                    root -> root.join(Activity_.project, JoinType.LEFT).get(Project_.id)));
             }
             if (criteria.getUserId() != null) {
                 specification = specification.and(buildSpecification(criteria.getUserId(),
-                    root -> root.join(Activity_.users, JoinType.LEFT).get(User_.id)));
+                    root -> root.join(Activity_.user, JoinType.LEFT).get(User_.id)));
             }
             if (criteria.getWeekId() != null) {
                 specification = specification.and(buildSpecification(criteria.getWeekId(),
-                    root -> root.join(Activity_.weeks, JoinType.LEFT).get(Week_.id)));
+                    root -> root.join(Activity_.week, JoinType.LEFT).get(Week_.id)));
             }
         }
         return specification;

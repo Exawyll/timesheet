@@ -39,8 +39,6 @@ public class ProjectCriteria implements Serializable, Criteria {
 
     private LongFilter userId;
 
-    private LongFilter activityId;
-
     public ProjectCriteria() {
     }
 
@@ -52,7 +50,6 @@ public class ProjectCriteria implements Serializable, Criteria {
         this.endDate = other.endDate == null ? null : other.endDate.copy();
         this.isActive = other.isActive == null ? null : other.isActive.copy();
         this.userId = other.userId == null ? null : other.userId.copy();
-        this.activityId = other.activityId == null ? null : other.activityId.copy();
     }
 
     @Override
@@ -116,14 +113,6 @@ public class ProjectCriteria implements Serializable, Criteria {
         this.userId = userId;
     }
 
-    public LongFilter getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(LongFilter activityId) {
-        this.activityId = activityId;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -141,8 +130,7 @@ public class ProjectCriteria implements Serializable, Criteria {
             Objects.equals(startDate, that.startDate) &&
             Objects.equals(endDate, that.endDate) &&
             Objects.equals(isActive, that.isActive) &&
-            Objects.equals(userId, that.userId) &&
-            Objects.equals(activityId, that.activityId);
+            Objects.equals(userId, that.userId);
     }
 
     @Override
@@ -154,8 +142,7 @@ public class ProjectCriteria implements Serializable, Criteria {
         startDate,
         endDate,
         isActive,
-        userId,
-        activityId
+        userId
         );
     }
 
@@ -170,7 +157,6 @@ public class ProjectCriteria implements Serializable, Criteria {
                 (endDate != null ? "endDate=" + endDate + ", " : "") +
                 (isActive != null ? "isActive=" + isActive + ", " : "") +
                 (userId != null ? "userId=" + userId + ", " : "") +
-                (activityId != null ? "activityId=" + activityId + ", " : "") +
             "}";
     }
 

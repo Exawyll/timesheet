@@ -3,7 +3,6 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.TimesheetApp;
 import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.User;
-import com.mycompany.myapp.domain.Activity;
 import com.mycompany.myapp.repository.ProjectRepository;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.dto.ProjectCriteria;
@@ -11,14 +10,9 @@ import com.mycompany.myapp.service.ProjectQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,12 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link ProjectResource} REST controller.
  */
 @SpringBootTest(classes = TimesheetApp.class)
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class ProjectResourceIT {
@@ -61,12 +52,6 @@ public class ProjectResourceIT {
 
     @Autowired
     private ProjectRepository projectRepository;
-
-    @Mock
-    private ProjectRepository projectRepositoryMock;
-
-    @Mock
-    private ProjectService projectServiceMock;
 
     @Autowired
     private ProjectService projectService;
@@ -177,26 +162,6 @@ public class ProjectResourceIT {
             .andExpect(jsonPath("$.[*].isActive").value(hasItem(DEFAULT_IS_ACTIVE.booleanValue())));
     }
     
-    @SuppressWarnings({"unchecked"})
-    public void getAllProjectsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public void getAllProjectsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
     @Test
     @Transactional
     public void getProject() throws Exception {
@@ -555,7 +520,7 @@ public class ProjectResourceIT {
         User user = UserResourceIT.createEntity(em);
         em.persist(user);
         em.flush();
-        project.addUser(user);
+        project.setUser(user);
         projectRepository.saveAndFlush(project);
         Long userId = user.getId();
 
@@ -564,26 +529,6 @@ public class ProjectResourceIT {
 
         // Get all the projectList where user equals to userId + 1
         defaultProjectShouldNotBeFound("userId.equals=" + (userId + 1));
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllProjectsByActivityIsEqualToSomething() throws Exception {
-        // Initialize the database
-        projectRepository.saveAndFlush(project);
-        Activity activity = ActivityResourceIT.createEntity(em);
-        em.persist(activity);
-        em.flush();
-        project.addActivity(activity);
-        projectRepository.saveAndFlush(project);
-        Long activityId = activity.getId();
-
-        // Get all the projectList where activity equals to activityId
-        defaultProjectShouldBeFound("activityId.equals=" + activityId);
-
-        // Get all the projectList where activity equals to activityId + 1
-        defaultProjectShouldNotBeFound("activityId.equals=" + (activityId + 1));
     }
 
     /**

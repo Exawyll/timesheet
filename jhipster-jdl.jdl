@@ -18,14 +18,11 @@ entity Activity {
 	timeSpent Long
 }
 
-relationship ManyToMany {
-	Activity{project(name)} to Project{activity},
+relationship ManyToOne {
+	Activity{project(name)} to Project,
     Activity{User(firstName)} to User,
-    Activity{week(label)} to Week{activity}
-}
-
-relationship ManyToMany {
-	Project{User(firstName)} to User
+    Activity{week(label)} to Week,
+    Project{User(firstName)} to User
 }
 
 filter Activity

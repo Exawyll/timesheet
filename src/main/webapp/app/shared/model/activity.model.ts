@@ -5,17 +5,11 @@ import { IWeek } from 'app/shared/model/week.model';
 export interface IActivity {
   id?: number;
   timeSpent?: number;
-  projects?: IProject[];
-  users?: IUser[];
-  weeks?: IWeek[];
+  project?: IProject;
+  user?: IUser;
+  week?: IWeek;
 }
 
 export class Activity implements IActivity {
-  constructor(
-    public id?: number,
-    public timeSpent?: number,
-    public projects?: IProject[],
-    public users?: IUser[],
-    public weeks?: IWeek[]
-  ) {}
+  constructor(public id?: number, public timeSpent?: number, public project?: IProject, public user?: IUser, public week?: IWeek) {}
 }

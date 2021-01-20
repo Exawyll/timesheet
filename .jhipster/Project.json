@@ -24,20 +24,11 @@
   ],
   "relationships": [
     {
-      "relationshipType": "many-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityName": "user",
       "otherEntityRelationshipName": "project",
       "relationshipName": "user",
-      "otherEntityField": "firstName",
-      "ownerSide": true
-    },
-    {
-      "relationshipType": "many-to-many",
-      "otherEntityName": "activity",
-      "otherEntityRelationshipName": "project",
-      "relationshipName": "activity",
-      "otherEntityField": "id",
-      "ownerSide": false
+      "otherEntityField": "firstName"
     }
   ],
   "changelogDate": "20210114132741",

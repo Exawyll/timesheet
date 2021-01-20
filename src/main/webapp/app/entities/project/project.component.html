@@ -41,9 +41,7 @@
                     <td>{{ project.endDate | date:'medium' }}</td>
                     <td>{{ project.isActive }}</td>
                     <td>
-                        <span *ngFor="let user of project.users; let last = last">
-                            {{ user.firstName }}{{ last ? '' : ', ' }}
-                        </span>
+                        {{ project.user?.firstName }}
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
