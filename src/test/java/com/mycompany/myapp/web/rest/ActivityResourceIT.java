@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class ActivityResourceIT {
 
-    private static final Long DEFAULT_TIME_SPENT = 1L;
-    private static final Long UPDATED_TIME_SPENT = 2L;
-    private static final Long SMALLER_TIME_SPENT = 1L - 1L;
+    private static final Float DEFAULT_TIME_SPENT = 1F;
+    private static final Float UPDATED_TIME_SPENT = 2F;
+    private static final Float SMALLER_TIME_SPENT = 1F - 1F;
 
     @Autowired
     private ActivityRepository activityRepository;
@@ -132,7 +132,7 @@ public class ActivityResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(activity.getId().intValue())))
-            .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.intValue())));
+            .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.doubleValue())));
     }
     
     @Test
@@ -146,7 +146,7 @@ public class ActivityResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(activity.getId().intValue()))
-            .andExpect(jsonPath("$.timeSpent").value(DEFAULT_TIME_SPENT.intValue()));
+            .andExpect(jsonPath("$.timeSpent").value(DEFAULT_TIME_SPENT.doubleValue()));
     }
 
 
@@ -341,7 +341,7 @@ public class ActivityResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(activity.getId().intValue())))
-            .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.intValue())));
+            .andExpect(jsonPath("$.[*].timeSpent").value(hasItem(DEFAULT_TIME_SPENT.doubleValue())));
 
         // Check, that the count call also returns 1
         restActivityMockMvc.perform(get("/api/activities/count?sort=id,desc&" + filter))

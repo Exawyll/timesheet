@@ -34,8 +34,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/timesheet
-    username: timesheet
-    password:
+    username: postgres
+    password: prout
     hikari:
       poolName: Hikari
       auto-commit: false

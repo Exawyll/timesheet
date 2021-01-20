@@ -15,7 +15,7 @@ entity Week {
 }
 
 entity Activity {
-	timeSpent Long
+	timeSpent Float
 }
 
 relationship ManyToOne {

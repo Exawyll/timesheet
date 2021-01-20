@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "timeSpent",
-      "fieldType": "Long"
+      "fieldType": "Float"
     }
   ],
   "relationships": [

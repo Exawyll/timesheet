@@ -26,7 +26,7 @@ public class ActivityCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private LongFilter timeSpent;
+    private FloatFilter timeSpent;
 
     private LongFilter projectId;
 
@@ -58,11 +58,11 @@ public class ActivityCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public LongFilter getTimeSpent() {
+    public FloatFilter getTimeSpent() {
         return timeSpent;
     }
 
-    public void setTimeSpent(LongFilter timeSpent) {
+    public void setTimeSpent(FloatFilter timeSpent) {
         this.timeSpent = timeSpent;
     }
 

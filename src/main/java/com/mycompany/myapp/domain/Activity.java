@@ -24,7 +24,7 @@ public class Activity implements Serializable {
     private Long id;
 
     @Column(name = "time_spent")
-    private Long timeSpent;
+    private Float timeSpent;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "activities", allowSetters = true)
@@ -47,16 +47,16 @@ public class Activity implements Serializable {
         this.id = id;
     }
 
-    public Long getTimeSpent() {
+    public Float getTimeSpent() {
         return timeSpent;
     }
 
-    public Activity timeSpent(Long timeSpent) {
+    public Activity timeSpent(Float timeSpent) {
         this.timeSpent = timeSpent;
         return this;
     }
 
-    public void setTimeSpent(Long timeSpent) {
+    public void setTimeSpent(Float timeSpent) {
         this.timeSpent = timeSpent;
     }
 
