@@ -141,7 +141,7 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: timesheet@localhost
+    from: exaw.cloud@gmail.com
   swagger:
     default-include-pattern: /api/.*
     title: timesheet API
